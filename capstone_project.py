@@ -89,8 +89,7 @@ user_input = st.text_input("Enter some text:")
 input_doc = search_documents(user_input)
 
 # Display the output
-if user_input:
-    query = input_doc
+query = input_doc
 # build the vector store with embeddings
 build_vector_store(pdf_files)
 
