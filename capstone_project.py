@@ -88,8 +88,8 @@ build_vector_store(pdf_files)
 load_vector_store()
 
 # example query
-query = "How to apply for a driver's license?"
-document_ids = search_documents(query)
+# query = "How to apply for a driver's license?"
+# document_ids = search_documents(query)
 # generate answer
 def generate_answer(documents_ids):
     context = ' '.join([extract_text_from_pdf(pdf_files[i]) for i in document_ids])
@@ -108,7 +108,7 @@ def generate_answer(documents_ids):
     )
     return response.choices[0].message.content.strip()
 
-print(generate_answer(document_ids))
+# print(generate_answer(document_ids))
 
 
 
