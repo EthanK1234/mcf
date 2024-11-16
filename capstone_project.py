@@ -98,7 +98,7 @@ build_vector_store(pdf_files)
 load_vector_store()
 
 document_ids = search_documents(query)
-generate answer
+# generate answer
 def generate_answer(documents_ids):
     context = ' '.join([extract_text_from_pdf(pdf_files[i]) for i in document_ids])
     # truncate the contect to fit within the token limit
@@ -119,6 +119,6 @@ def generate_answer(documents_ids):
 # print(generate_answer(document_ids))
 
 
-st.write(generate_answer(input_doc))
+st.write(generate_answer(document_ids))
 
 
