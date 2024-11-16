@@ -106,18 +106,18 @@ def generate_answer(documents_ids):
     max_context_length = 4097 - len(query) - 400 # reserve space for query  and completion
     if len(context) > max_context_length :
         context = context[:max_context_length]
-    prompt = f"Based on the following documents : {context}\n\nAnswer the query :{query}"
+    prompt = f"Based on the following documents : {context}\n\nAnswer the query by giving the answer first, then giving an explanation, and finally give the source or document used. :{query}"
     response = openai.ChatCompletion.create(
         model="gpt-4o",
         messages=[
-            {"role": "system", "content": "You are a helpful assistant."},
+            {"role": "system", "content": "Take the persona of a helpful and empathetic customer service agent with an objective, encyclopedic way of thinking."},
             {"role": "user", "content": prompt}
         ],
         max_tokens=200
     )
     return response.choices[0].message.content.strip()
 
-
+#answer, explination, citation. ground the responses to only DMV related prompts.
 
 st.write(generate_answer(document_ids))
 
