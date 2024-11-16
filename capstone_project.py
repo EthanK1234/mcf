@@ -115,9 +115,9 @@ print(generate_answer(document_ids))
 # Title of the app
 st.title("Capstone Project")
 
-input_doc = search_documents(user_input)
 
 user_input = st.text_input("Enter some text:")
+input_doc = search_documents(user_input)
 
 # Display the output
 if user_input:
