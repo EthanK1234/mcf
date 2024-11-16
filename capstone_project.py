@@ -121,7 +121,7 @@ input_doc = search_documents(user_input)
 
 # Display the output
 if user_input:
-    st.write(f"You entered: {user_input}")
-else:
     st.write(generate_answer(input_doc))
+else:
+    st.write("broken")
 
