@@ -5,7 +5,7 @@ from annoy import AnnoyIndex
 import numpy as np
 
 # initiate the openai key and Annoy
-openai.api_key = OPENAI_API_KEY
+openai.api_key = os.getenv("OPENAI_API_KEY")
 embeddings_index = AnnoyIndex(1536, 'angular') # size of the gpt 3.5 embeddings
 
 MAX_TOKENS = 8192 # maximum number of tokens for the model
