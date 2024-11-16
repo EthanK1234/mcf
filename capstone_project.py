@@ -5,49 +5,6 @@ from annoy import AnnoyIndex
 import numpy as np
 import streamlit as st
 
-# initiate the openai key and Annoy
-openai.api_key = os.getenv("OPENAI_API_KEY")
-embeddings_index = AnnoyIndex(1536, 'angular') # size of the gpt 3.5 embeddings
-
-MAX_TOKENS = 8192 # maximum number of tokens for the model
-
-# extract text from pdf
-def extract_text_from_pdf(pdf_path):
-    doc = fitz.open(pdf_path)
-    text = ""
-    for page in doc:
-        text += page.get_text()
-    return text
-
-
-# generates the embeddings form the given text using openai
-def generate_embeddings(text):
-    if len(text) > MAX_TOKENS:
-        text = text[:MAX_TOKENS] # truncate text to fit within token limits
-    response = openai.Embedding.create(input=text, engine = "text-embedding-ada-002")
-    return response['data'][0]['embedding']
-
-# builds an annoy vector store for the extracted pdf texts
-def build_vector_store(file_paths):
-    for i, file_path in enumerate(file_paths):
-       text = extract_text_from_pdf(file_path)
-       embedding = generate_embeddings(text)
-       embeddings_index.add_item(i, embedding)
-    embeddings_index.build(10) # 10 tress
-    embeddings_index.save("text_embeddings.ann")
-
-
-# loads the vector store
-def load_vector_store():
-    embeddings_index.load("text_embeddings.ann")
-
-# search the vector store for documents similar to the query
-def search_documents(query, k=1):
-    query_embedding = generate_embeddings(query)
-    nearest_ids = embeddings_index.get_nns_by_vector(query_embedding, k) # retrive the top 5 similar items
-    return nearest_ids
-
-
 # paths to the pdfs
 pdf_files = ['15DayExpressTerms.pdf',
              '808677.pdf',
@@ -80,24 +37,69 @@ pdf_files = ['15DayExpressTerms.pdf',
              'residency_docslist.pdf',
              'sr104.pdf']
 
+# initiate the openai key and Annoy
+openai.api_key = os.getenv("OPENAI_API_KEY")
+embeddings_index = AnnoyIndex(1536, 'angular') # size of the gpt 3.5 embeddings
+
+MAX_TOKENS = 8192 # maximum number of tokens for the model
+
+# extract text from pdf
+def extract_text_from_pdf(pdf_path):
+    doc = fitz.open(pdf_path)
+    text = ""
+    for page in doc:
+        text += page.get_text()
+    return text
+
+
+# generates the embeddings form the given text using openai
+def generate_embeddings(text):
+    if len(text) > MAX_TOKENS:
+        text = text[:MAX_TOKENS] # truncate text to fit within token limits
+    response = openai.Embedding.create(input=text, engine = "text-embedding-ada-002")
+    return response['data'][0]['embedding']
+
+
+# builds an annoy vector store for the extracted pdf texts
+def build_vector_store(file_paths):
+    for i, file_path in enumerate(file_paths):
+       text = extract_text_from_pdf(file_path)
+       embedding = generate_embeddings(text)
+       embeddings_index.add_item(i, embedding)
+    embeddings_index.build(10) # 10 tress
+    embeddings_index.save("text_embeddings.ann")
+
+
+# loads the vector store
+def load_vector_store():
+    embeddings_index.load("text_embeddings.ann")
+
+
+# search the vector store for documents similar to the query
+def search_documents(query, k=1):
+    query_embedding = generate_embeddings(query)
+    nearest_ids = embeddings_index.get_nns_by_vector(query_embedding, k) # retrive the top 5 similar items
+    return nearest_ids
+
+
+
 
 # Title of the app
 st.title("Capstone Project")
 
 
 user_input = st.text_input("Enter some text:")
-input_doc = search_documents(user_input)
 
-# Display the output
-query = input_doc
+
 # build the vector store with embeddings
 build_vector_store(pdf_files)
 
 # load vector store
 load_vector_store()
 
-document_ids = search_documents(query)
+query = user_input
 # generate answer
+document_ids = search_documents(query)
 def generate_answer(documents_ids):
     context = ' '.join([extract_text_from_pdf(pdf_files[i]) for i in document_ids])
     # truncate the contect to fit within the token limit
@@ -115,7 +117,6 @@ def generate_answer(documents_ids):
     )
     return response.choices[0].message.content.strip()
 
-# print(generate_answer(document_ids))
 
 
 st.write(generate_answer(document_ids))
