@@ -1,4 +1,4 @@
-import openai
+import openai==0.28
 import fitz
 import os
 from annoy import AnnoyIndex
