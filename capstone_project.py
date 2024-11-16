@@ -3,6 +3,7 @@ import fitz
 import os
 from annoy import AnnoyIndex
 import numpy as np
+import streamlit as st
 
 # initiate the openai key and Annoy
 openai.api_key = os.getenv("OPENAI_API_KEY")
