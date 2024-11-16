@@ -89,8 +89,6 @@ load_vector_store()
 # example query
 query = "How to apply for a driver's license?"
 document_ids = search_documents(query)
-print("Top documents for query:", document_ids)
-
 # generate answer
 def generate_answer(documents_ids):
     context = ' '.join([extract_text_from_pdf(pdf_files[i]) for i in document_ids])
@@ -111,4 +109,17 @@ def generate_answer(documents_ids):
 
 print(generate_answer(document_ids))
 
+
+
+# Title of the app
+st.title("Capstone Project")
+
+# Text input widget
+user_input = st.text_input("Enter some text:")
+
+# Display the output
+if user_input:
+    st.write(f"You entered: {user_input}")
+else:
+    st.write(generate_answer(document_ids))
 
