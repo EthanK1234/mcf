@@ -103,7 +103,7 @@ document_ids = search_documents(query)
 def generate_answer(documents_ids):
     context = ' '.join([extract_text_from_pdf(pdf_files[i]) for i in document_ids])
     # truncate the contect to fit within the token limit
-    max_context_length = 4097 - len(query) - 200 # reserve space for query  and completion
+    max_context_length = 4097 - len(query) - 400 # reserve space for query  and completion
     if len(context) > max_context_length :
         context = context[:max_context_length]
     prompt = f"Based on the following documents : {context}\n\nAnswer the query :{query}"
