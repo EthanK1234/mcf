@@ -115,12 +115,13 @@ print(generate_answer(document_ids))
 # Title of the app
 st.title("Capstone Project")
 
-# Text input widget
+input_doc = search_documents(user_input)
+
 user_input = st.text_input("Enter some text:")
 
 # Display the output
 if user_input:
     st.write(f"You entered: {user_input}")
 else:
-    st.write(generate_answer(document_ids))
+    st.write(generate_answer(input_doc))
 
