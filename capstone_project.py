@@ -81,16 +81,24 @@ pdf_files = ['15DayExpressTerms.pdf',
              'sr104.pdf']
 
 
+# Title of the app
+st.title("Capstone Project")
+
+
+user_input = st.text_input("Enter some text:")
+input_doc = search_documents(user_input)
+
+# Display the output
+if user_input:
+    query = input_doc
 # build the vector store with embeddings
 build_vector_store(pdf_files)
 
 # load vector store
 load_vector_store()
 
-# example query
-# query = "How to apply for a driver's license?"
-# document_ids = search_documents(query)
-# generate answer
+document_ids = search_documents(query)
+generate answer
 def generate_answer(documents_ids):
     context = ' '.join([extract_text_from_pdf(pdf_files[i]) for i in document_ids])
     # truncate the contect to fit within the token limit
@@ -111,17 +119,6 @@ def generate_answer(documents_ids):
 # print(generate_answer(document_ids))
 
 
+st.write(generate_answer(input_doc))
 
-# Title of the app
-st.title("Capstone Project")
-
-
-user_input = st.text_input("Enter some text:")
-input_doc = search_documents(user_input)
-
-# Display the output
-if user_input:
-    st.write(generate_answer(input_doc))
-else:
-    st.write("broken")
 
